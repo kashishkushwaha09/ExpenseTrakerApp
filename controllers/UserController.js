@@ -1,3 +1,4 @@
+const bcrypt=require('bcrypt');
 const User= require('../models/userModel');
 
 const signUpUser=async(req,res)=>{
@@ -10,10 +11,11 @@ const signUpUser=async(req,res)=>{
                 message:"user already exists"
             })
         }
+        const hashPassword=await bcrypt.hash(password,10);
         const user=await User.create({
             name:name,
             email:email,
-            password:password
+            password:hashPassword
         });
         res.status(201).json({
             message:"user created successfully",
@@ -35,8 +37,9 @@ const loginUser=async(req,res)=>{
             return res.status(404).json({message:"User not Found",success:false})
         }
         console.log(existingUser);
-        if(existingUser.password!==password){
-            return res.status(401).json({message:"User not authorized",success:false})
+        const isPasswordMatched=await bcrypt.compare(password,existingUser.password);
+        if(!isPasswordMatched){
+            return res.status(401).json({message:"Password not matched",success:false})
         }
         return res.status(200).json({user:existingUser,success:true})
     } catch (error) {
