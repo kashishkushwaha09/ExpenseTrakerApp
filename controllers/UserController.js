@@ -25,7 +25,27 @@ const signUpUser=async(req,res)=>{
         })
     }
 }
-
+const loginUser=async(req,res)=>{
+    const {email,password}=req.body;
+    try {
+        const existingUser=await User.findOne({
+            where:{email}
+            // attributes:['id', 'name', 'email', 'password']
+        });
+        if(!existingUser){
+            return res.status(404).json({message:"User not Found",success:false})
+        }
+        console.log(existingUser);
+        if(existingUser.password!==password){
+            return res.status(400).json({message:"Password does not match",success:false})
+        }
+        return res.status(200).json({user:existingUser,success:true})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message:error.message,success:false})
+    }
+}
 module.exports={
-    signUpUser
+    signUpUser,
+    loginUser
 }
