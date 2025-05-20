@@ -36,7 +36,7 @@ const loginUser=async(req,res)=>{
         }
         console.log(existingUser);
         if(existingUser.password!==password){
-            return res.status(400).json({message:"Password does not match",success:false})
+            return res.status(401).json({message:"User not authorized",success:false})
         }
         return res.status(200).json({user:existingUser,success:true})
     } catch (error) {
