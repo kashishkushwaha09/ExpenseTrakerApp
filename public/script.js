@@ -1,3 +1,4 @@
+
 const url='http://localhost:4000/api';
 const userAuthDiv=document.getElementById('userAuth');
 const authButton=document.getElementById('auth');
@@ -11,6 +12,10 @@ async function handleSubmit(event) {
         password: event.target.password.value
     }
       user= await loginUser(userData);
+      alert(user.message || "user Login successfully");
+      window.location.assign('expense.html');
+      userAuthDiv='';
+      sessionStorage.removeItem('authStatus');
    }else{
     userData={
         name: event.target.name.value,
@@ -18,10 +23,13 @@ async function handleSubmit(event) {
         password: event.target.password.value
     }
     user=await signupUser(userData);
+     sessionStorage.setItem("authStatus","login");
+     userAuthDiv.innerHTML='';
+     alert(user.message || "user Signup successfully");
    }
-    alert(user.message || "user login successfully");
-    sessionStorage.setItem("authStatus","login");
-    userAuthDiv.innerHTML='';
+    
+   
+    
     authModule();
 }
 async function loginUser(userData){
