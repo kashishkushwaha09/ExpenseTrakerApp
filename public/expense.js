@@ -11,6 +11,7 @@ async function handleSubmit(event){
     const data=await addExpense(expenseData);
     console.log(data);
     alert(data?.message || "something went wrong");
+    showExpenseList();
 }
 async function addExpense(expenseData){
     try {
@@ -34,16 +35,39 @@ async function fetchExpense(){
     }
   
 }
+async function deleteExpense(expense){
+    
+    try {
+        const response=await axios.delete(`${url}/expenses/${expense.id}`);
+         console.log("deleted expense ",response);
+        if(response.status===200){
+            alert(response.data?.message);
+            showExpenseList();
+        }
+    } catch (error) {
+        console.log(error.response?.data || error.message);
+        alert(error.response?.data?.message || error.message);
+    }
+}
 async function showExpenseList(){
-    const expenseList=document.createElement('ul');
+    const expenseList=document.getElementById('expense-list');
+    expenseList.innerHTML='';
     const expenses=await fetchExpense();
     expenses.forEach((expense) => {
+        console.log(expense);
        let listElem=document.createElement('li');
     listElem.innerHTML=`Price: ${expense.price} Description: ${expense.description} category: ${expense.category}`;
+
+    const deleteBtn=document.createElement('button');
+    deleteBtn.innerText='delete expense';
+    deleteBtn.addEventListener('click',()=>{
+     deleteExpense(expense);
+    })
     expenseList.appendChild(listElem); 
+    expenseList.appendChild(deleteBtn);
     });
     document.querySelector('body').appendChild(expenseList);
-    console.log(expenses);
+   
 
 }
 document.addEventListener('DOMContentLoaded',showExpenseList);

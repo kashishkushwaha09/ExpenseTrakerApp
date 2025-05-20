@@ -4,8 +4,7 @@ const app=express();
 const db=require('./utils/db-connection');
 const userRoutes=require('./routes/userRoutes');
 const expenseRoutes=require('./routes/expenseRoutes');
-const User= require('./models/userModel');
-const Expense=require('./models/expenseModel');
+require('./models');
 
 app.use(express.static('public'));
 app.use(express.json());

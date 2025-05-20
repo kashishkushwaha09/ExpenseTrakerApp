@@ -13,8 +13,9 @@ async function handleSubmit(event) {
     }
       user= await loginUser(userData);
       alert(user.message || "user Login successfully");
+      axios.defaults.headers.common['user-id']=user.user.id;
       window.location.assign('expense.html');
-      userAuthDiv='';
+      userAuthDiv.innerHTML='';
       sessionStorage.removeItem('authStatus');
    }else{
     userData={
@@ -35,7 +36,7 @@ async function handleSubmit(event) {
 async function loginUser(userData){
     try {
         const response=await axios.post(`${url}/users/login`,userData);
-        console.log(response.data);
+        console.log(response.data.user.id);
         return response.data;
     } catch (error) {
         console.log(error.response?.data || error.message);
