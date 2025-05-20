@@ -23,3 +23,27 @@ async function addExpense(expenseData){
     }
   
 }
+async function fetchExpense(){
+    try {
+       const response=await axios.get(`${url}/expenses`);  
+       return response.data.expenses;
+    } catch (error) {
+        console.log(error.response?.data || error.message);
+        alert(error.response?.data?.message || error.message)
+         return null;
+    }
+  
+}
+async function showExpenseList(){
+    const expenseList=document.createElement('ul');
+    const expenses=await fetchExpense();
+    expenses.forEach((expense) => {
+       let listElem=document.createElement('li');
+    listElem.innerHTML=`Price: ${expense.price} Description: ${expense.description} category: ${expense.category}`;
+    expenseList.appendChild(listElem); 
+    });
+    document.querySelector('body').appendChild(expenseList);
+    console.log(expenses);
+
+}
+document.addEventListener('DOMContentLoaded',showExpenseList);

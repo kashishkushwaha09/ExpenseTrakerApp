@@ -13,9 +13,19 @@ res.status(201).json({message:"expense created successfully", expense:newExpese}
     }
 
 }
+const getExpense=async(req,res)=>{
+    try {
+const expenses=await Expense.findAll();
+res.status(200).json({message:"got all expenses successfully",expenses}); 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:error.message});
+    }
+
+}
 
 
 
 module.exports={
-    addExpense
+    addExpense,getExpense
 }
