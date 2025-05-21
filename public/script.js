@@ -11,9 +11,11 @@ async function handleSubmit(event) {
         email: event.target.email.value,
         password: event.target.password.value
     }
+    // login function
       user= await loginUser(userData);
       alert(user.message || "user Login successfully");
-      axios.defaults.headers.common['user-id']=user.user.id;
+      
+    sessionStorage.setItem("token",user.token);
       window.location.assign('expense.html');
       userAuthDiv.innerHTML='';
       sessionStorage.removeItem('authStatus');
@@ -36,7 +38,7 @@ async function handleSubmit(event) {
 async function loginUser(userData){
     try {
         const response=await axios.post(`${url}/users/login`,userData);
-        console.log(response.data.user.id);
+        
         return response.data;
     } catch (error) {
         console.log(error.response?.data || error.message);

@@ -1,9 +1,10 @@
 const express=require('express');
 const router=express.Router();
 const expenseController=require('../controllers/expenseController');
-router.get('/',expenseController.getExpense);
-router.post('/',expenseController.addExpense);
-router.delete('/:id',expenseController.deleteExpense);
+const authenticateUser=require('../middlewares/auth');
+router.get('/',authenticateUser,expenseController.getExpense);
+router.post('/',authenticateUser,expenseController.addExpense);
+router.delete('/:id',authenticateUser,expenseController.deleteExpense);
 
 
 

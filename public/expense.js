@@ -1,4 +1,11 @@
 const url='http://localhost:4000/api';
+const token=sessionStorage.getItem("token");
+const cashfree=Cashfree({
+    mode:"sandbox"
+})
+if(token){
+    axios.defaults.headers.common['Authorization']=`Bearer ${token}`;
+}
 
 async function handleSubmit(event){
     event.preventDefault();
@@ -70,4 +77,29 @@ async function showExpenseList(){
    
 
 }
+async function handlePayment(){
+    try {
+        // fetch payment session id from backend
+        const response=await axios.post(`http://localhost:4000/payment/create-order`,{
+            orderId:Math.random().toString(36).substring(2, 15),
+            orderAmount:1.00,
+            orderCurrency:'INR',
+        });
+        console.log("payment response ",response);
+           const data=await response.data;
+           console.log("payment data ",data);
+           const paymentSessionId=data.paymentSession_id;
+
+           let checkoutOptions={ 
+           paymentSessionId:paymentSessionId,
+           redirectTarget:'_self',
+        };
+        //Start the checkout process
+        await cashfree.checkout(checkoutOptions);
+    } catch (error) {
+        console.log("Error in payment ",error);
+        alert(error.response?.data?.message || error.message);
+    }
+}
 document.addEventListener('DOMContentLoaded',showExpenseList);
+document.getElementById('pay-button').addEventListener('click',handlePayment);

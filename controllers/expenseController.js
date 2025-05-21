@@ -3,10 +3,9 @@ const Expense=require('../models/expenseModel');
 const addExpense=async(req,res)=>{
     try {
        const {price,description,category}=req.body;
-       const userId=req.headers['user-id'];
-       console.log("headers set  ",parseInt(userId));
+       console.log(req.user);
 const newExpese=await Expense.create({
-    price,description,category,UserId:parseInt(userId)
+    price,description,category,UserId:(req.user.id)
 })
 res.status(201).json({message:"expense created successfully", expense:newExpese}); 
     } catch (error) {
@@ -17,7 +16,7 @@ res.status(201).json({message:"expense created successfully", expense:newExpese}
 }
 const getExpense=async(req,res)=>{
     try {
-const expenses=await Expense.findAll();
+const expenses=await Expense.findAll({where:{UserId:req.user.id}});
 res.status(200).json({message:"got all expenses successfully",expenses}); 
     } catch (error) {
         console.log(error);
