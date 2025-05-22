@@ -6,6 +6,21 @@ const cashfree=Cashfree({
 if(token){
     axios.defaults.headers.common['Authorization']=`Bearer ${token}`;
 }
+(async ()=>{
+    try {
+        const params=new URLSearchParams(window.location.search);
+const orderId=params.get('orderId');
+if(orderId){
+    const response=await axios.get(`http://localhost:4000/payment/payment-status/${orderId}`);
+    console.log("response from payment status ",response);
+    alert(response.data.status);
+}
+    } catch (error) {
+        console.log("Error in payment status ",error);
+        alert(error.response?.data?.message || error.message);
+    }
+})();
+
 
 async function handleSubmit(event){
     event.preventDefault();

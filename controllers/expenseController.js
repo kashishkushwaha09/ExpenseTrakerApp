@@ -1,3 +1,4 @@
+const { User } = require('../models');
 const Expense=require('../models/expenseModel');
 
 const addExpense=async(req,res)=>{
@@ -40,8 +41,24 @@ const deleteExpense=async(req,res)=>{
         res.status(500).json({message:error.message});
     }
 }
-
+const showLeaderboard=async(req,res)=>{
+    try{
+const expenses=await Expense.findAll({
+    attributes:['UserId',[sequelize.fn('sum',sequelize.col('price')),'totalExpense']],
+    group:['UserId'],
+    include:[{
+        model:User,
+        attributes:['name']
+    }],
+    order:[[sequelize.fn('sum',sequelize.col('price')),'DESC']],
+})
+res.status(200).json({message:"got all expenses successfully",expenses});
+    }catch(error){
+        console.log(error);
+        res.status(500).json({message:error.message});
+    }
+}
 
 module.exports={
-    addExpense,getExpense, deleteExpense
+    addExpense,getExpense, deleteExpense, showLeaderboard
 }

@@ -1,6 +1,7 @@
 const { Cashfree, CFEnvironment } =require("cashfree-pg"); 
 const Order = require("../models/orderModel");
-
+const User = require("../models/userModel");
+const { isPrimitive } = require("sequelize/lib/utils");
 const cashfree = new Cashfree(CFEnvironment.SANDBOX,process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
 
 exports.createOrder=async(req,res)=>{
@@ -27,7 +28,7 @@ exports.createOrder=async(req,res)=>{
     },
     "order_meta": {
         // "return_url": "https://www.cashfree.com/devstudio/preview/pg/web/checkout?order_id={order_id}"
-        "return_url":`http://localhost:4000/payment/payment-status/${orderId}`,
+        "return_url":`http://localhost:4000/expense.html?orderId=${orderId}`,
         "payment_methods":"ccc,upi,nb"
     },
     "order_expiry_time":formattedExpiryDate,
@@ -60,6 +61,14 @@ exports.getPaymentStatus=async(req,res)=>{
             .length>0
         ){
             orderStatus='success';
+           
+        const updateUser=await User.update({isPremium:true},
+            {
+                where:{
+                    email:order.email
+                },
+            },
+        );
         }else if(
             getOrderResponse.filter((transaction)=>transaction.payment_status==='PENDING')
             .length>0
@@ -76,7 +85,7 @@ exports.getPaymentStatus=async(req,res)=>{
             },
         },
     );
-       return res.status(200).json({orderStatus,success:true});
+       return res.status(200).json({status:orderStatus,success:true});
     } catch (error) {
         console.log("Error getting payment status:", error.message);
         return res.status(500).json({ message: 'Error getting payment status' });

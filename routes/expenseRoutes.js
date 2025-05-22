@@ -3,6 +3,7 @@ const router=express.Router();
 const expenseController=require('../controllers/expenseController');
 const authenticateUser=require('../middlewares/auth');
 router.get('/',authenticateUser,expenseController.getExpense);
+router.get('/premium/leaderboard',authenticateUser,expenseController.showLeaderboard);
 router.post('/',authenticateUser,expenseController.addExpense);
 router.delete('/:id',authenticateUser,expenseController.deleteExpense);
 
