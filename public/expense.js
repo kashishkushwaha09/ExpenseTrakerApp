@@ -138,7 +138,7 @@ async function showLeaderboard(){
    leaderboardList.innerHTML='';
    leaderboardData.forEach((user) => {
     const listElem=document.createElement('li');
-    listElem.innerHTML=`Name: ${user.User.name} Total Expense: ${user.totalExpense}`;
+    listElem.innerHTML=`Name: ${user.name} Total Expense: ${user.totalExpense}`;
     leaderboardList.appendChild(listElem);
    })
 

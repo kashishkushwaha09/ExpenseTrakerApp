@@ -9,6 +9,13 @@ const addExpense=async(req,res)=>{
 const newExpese=await Expense.create({
     price,description,category,UserId:(req.user.id)
 })
+const existingUser=await User.findByPk(req.user.id);
+if(existingUser){
+    existingUser.totalExpense = (existingUser.totalExpense || 0) + Number(price);
+    await existingUser.save();
+}else{
+    console.log("in addExpense User not found")
+}
 res.status(201).json({message:"expense created successfully", expense:newExpese}); 
     } catch (error) {
         console.log(error);
@@ -44,15 +51,24 @@ const deleteExpense=async(req,res)=>{
 }
 const showLeaderboard=async(req,res)=>{
     try{
-const expenses=await Expense.findAll({
-    attributes:['UserId',[sequelize.fn('sum',sequelize.col('price')),'totalExpense']],
-    group:['UserId','User.id'],
-    include:[{
-        model:User,
-        attributes:['name']
-    }],
-    order:[[sequelize.fn('sum',sequelize.col('price')),'DESC']],
-})
+const expenses=await User.findAll({
+  attributes: [
+    'id',
+    'name',
+   'totalExpense'
+  ],
+  order: [['totalExpense', 'DESC']],
+});
+
+// await Expense.findAll({
+//     attributes:['UserId',[sequelize.fn('sum',sequelize.col('price')),'totalExpense']],
+//     group:['UserId','User.id'],
+//     include:[{
+//         model:User,
+//         attributes:['name']
+//     }],
+//     order:[[sequelize.fn('sum',sequelize.col('price')),'DESC']],
+// })
 res.status(200).json({message:"got all expenses successfully",expenses});
     }catch(error){
         console.log(error);
