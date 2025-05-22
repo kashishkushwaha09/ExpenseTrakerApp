@@ -46,7 +46,7 @@ const loginUser=async(req,res)=>{
             SECRET_KEY,
             {expiresIn:'7d'}
         );
-        return res.status(200).json({message:"Login Successful",token,success:true})
+        return res.status(200).json({message:"Login Successful",token,success:true,user:existingUser})
     } catch (error) {
         console.log(error);
         return res.status(500).json({message:error.message,success:false})

@@ -2,33 +2,34 @@
 const url='http://localhost:4000/api';
 const userAuthDiv=document.getElementById('userAuth');
 const authButton=document.getElementById('auth');
- let authStatus=sessionStorage.getItem("authStatus");
+ let authStatus=localStorage.getItem("authStatus");
 async function handleSubmit(event) {
     event.preventDefault(); // Prevent the default form submission behavior
-    let userData,user;
+    let userData, response;
    if(authStatus==="login"){
     userData={
         email: event.target.email.value,
         password: event.target.password.value
     }
     // login function
-      user= await loginUser(userData);
-      alert(user.message || "user Login successfully");
-      
-    sessionStorage.setItem("token",user.token);
+      response= await loginUser(userData);
+      alert(response.message || "user Login successfully");
+     
+    localStorage.setItem("token",response.token);
+    localStorage.setItem("isPremium",response.user.isPremium);
       window.location.assign('expense.html');
       userAuthDiv.innerHTML='';
-      sessionStorage.removeItem('authStatus');
+      localStorage.removeItem('authStatus');
    }else{
     userData={
         name: event.target.name.value,
         email: event.target.email.value,
         password: event.target.password.value
     }
-    user=await signupUser(userData);
-     sessionStorage.setItem("authStatus","login");
+    response=await signupUser(userData);
+     localStorage.setItem("authStatus","login");
      userAuthDiv.innerHTML='';
-     alert(user.message || "user Signup successfully");
+     alert(response.message || "user Signup successfully");
    }
     
    
@@ -60,7 +61,7 @@ async function signupUser(userData){
 
 }
 function authModule() {
-   authStatus=sessionStorage.getItem("authStatus");
+   authStatus=localStorage.getItem("authStatus");
     const form = document.createElement('form');
     form.className = 'container mt-5';
      const submitButton = document.createElement('button');
@@ -111,9 +112,9 @@ button.innerText='Login';
    
 button.addEventListener('click',()=>{
 if(authStatus==='login'){
-    sessionStorage.removeItem('authStatus');
+    localStorage.removeItem('authStatus');
 }else{
-    sessionStorage.setItem('authStatus','login');
+    localStorage.setItem('authStatus','login');
     
 }
 userAuthDiv.innerHTML='';

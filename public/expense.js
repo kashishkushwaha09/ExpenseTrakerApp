@@ -1,5 +1,7 @@
 const url='http://localhost:4000/api';
-const token=sessionStorage.getItem("token");
+const token=localStorage.getItem("token");
+const premiumStatus=localStorage.getItem("isPremium");
+console.log("premium status ", premiumStatus);
 const cashfree=Cashfree({
     mode:"sandbox"
 })
@@ -116,5 +118,32 @@ async function handlePayment(){
         alert(error.response?.data?.message || error.message);
     }
 }
+function handlePremiumFeature(){    
+    const buyPremiumCard=document.querySelector('.card');
+    if(premiumStatus==="true"){
+        buyPremiumCard.innerHTML='';
+        buyPremiumCard.innerHTML=`<h3 class="text-center my-4">You are a premium user</h3>
+        <div class="text-center">
+            <button class="btn btn-success mb-2" id="show-leaderboard">Show Leaderboard</button>
+        </div> `;
+        const showLeaderboardBtn=document.getElementById('show-leaderboard');
+        showLeaderboardBtn.addEventListener('click',showLeaderboard);
+}
+async function showLeaderboard(){
+    const response=await axios.get(`${url}/expenses/premium/leaderboard`);
+   console.log("leaderboard data ",response.data);
+   const leaderboardData=response.data.expenses;
+   document.getElementById('leaderboard').style.display='block';
+   const leaderboardList=document.getElementById('leaderboard-list');
+   leaderboardList.innerHTML='';
+   leaderboardData.forEach((user) => {
+    const listElem=document.createElement('li');
+    listElem.innerHTML=`Name: ${user.User.name} Total Expense: ${user.totalExpense}`;
+    leaderboardList.appendChild(listElem);
+   })
+
+}
+}
+document.addEventListener("DOMContentLoaded",handlePremiumFeature)
 document.addEventListener('DOMContentLoaded',showExpenseList);
 document.getElementById('pay-button').addEventListener('click',handlePayment);

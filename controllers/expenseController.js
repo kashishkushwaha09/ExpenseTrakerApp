@@ -1,5 +1,6 @@
-const { User } = require('../models');
+const User = require('../models/userModel');
 const Expense=require('../models/expenseModel');
+const sequelize = require('../utils/db-connection');
 
 const addExpense=async(req,res)=>{
     try {
@@ -45,7 +46,7 @@ const showLeaderboard=async(req,res)=>{
     try{
 const expenses=await Expense.findAll({
     attributes:['UserId',[sequelize.fn('sum',sequelize.col('price')),'totalExpense']],
-    group:['UserId'],
+    group:['UserId','User.id'],
     include:[{
         model:User,
         attributes:['name']
