@@ -120,11 +120,11 @@ if(authStatus==='login'){
 userAuthDiv.innerHTML='';
 authModule();
 });
-form.addEventListener('submit',handleSubmit);
+
 form.appendChild(submitButton);
     userAuthDiv.appendChild(form);
     userAuthDiv.appendChild(button)
-   
+ form.addEventListener('submit',handleSubmit);  
 }
 document.addEventListener('DOMContentLoaded',()=>{
 authModule();
