@@ -1,7 +1,9 @@
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 const SECRET_KEY='afab7a6b4b778789b93333dfb8e25f7f6299ee7602e414a47f420b12d1470d09';
 const User= require('../models/userModel');
+const { text } = require('express');
 
 const signUpUser=async(req,res)=>{  
     const {name,email,password}=req.body;
@@ -52,7 +54,46 @@ const loginUser=async(req,res)=>{
         return res.status(500).json({message:error.message,success:false})
     }
 }
+const forgotPassword=async(req,res)=>{
+    try {
+        const {email}=req.body; 
+        
+var defaultClient = SibApiV3Sdk.ApiClient.instance;
+// # Instantiate the client\
+var apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = process.env.MAILING_API_KEY;
+var tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+const sender={
+    email:'Kkachhi178@gmail.com',
+    name:"khushboo kachhi"
+}
+const receivers=[
+    {
+        email:email,
+    }
+]
+tranEmailApi.sendTransacEmail({
+    sender,
+    to:receivers,
+    subject:'ExpenseTracker Reset Password',
+    textContent:`reset code for your email {{params.code}}`,
+    params:{
+        code:'12345'
+    }
+}).then(
+    console.log
+)
+.catch((err)=>console.log(err))
+   return res.status(200).json({message:'email sent to your mail id',success:true})
+    }
+
+    catch(error){
+      console.log(error);
+      return res.status(500).json({message:error.message,success:false})
+    }
+}
 module.exports={
     signUpUser,
-    loginUser
+    loginUser,
+    forgotPassword
 }
