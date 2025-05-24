@@ -64,7 +64,7 @@ async function signupUser(userData){
 async function handleforgotPass(event){
   event.preventDefault();
   const email=event.target.email.value;
-  const response=await axios.post(`${url}/users/password/forgotPassword`,{email});
+  const response=await axios.post(`http://localhost:4000/password/forgotPassword`,{email});
   const data= await response.data;
   alert(data.message);
 
