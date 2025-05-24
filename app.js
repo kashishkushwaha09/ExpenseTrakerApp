@@ -7,6 +7,7 @@ const userRoutes=require('./routes/userRoutes');
 const expenseRoutes=require('./routes/expenseRoutes');
 const Order=require('./models/orderModel');
 const paymentRoutes=require('./routes/paymentRoutes');
+const passwordRoutes=require('./routes/passwordRoutes');
 require('./models');
 
 app.use(express.static('public'));
@@ -15,6 +16,7 @@ app.use(cors())
 app.use('/api/users', userRoutes);
 app.use('/api/expenses',expenseRoutes);
 app.use('/payment',paymentRoutes);
+app.use('/password',passwordRoutes);
 
 
 db.sync({alter:true}).then(()=>{

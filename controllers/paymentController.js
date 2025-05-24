@@ -1,7 +1,7 @@
 const { Cashfree, CFEnvironment } =require("cashfree-pg"); 
 const Order = require("../models/orderModel");
 const User = require("../models/userModel");
-const { isPrimitive } = require("sequelize/lib/utils");
+
 const cashfree = new Cashfree(CFEnvironment.SANDBOX,process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
 
 exports.createOrder=async(req,res)=>{

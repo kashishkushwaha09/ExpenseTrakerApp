@@ -5,4 +5,5 @@ router.post('/',userController.signUpUser);
 router.post('/login',userController.loginUser);
 
 
+
 module.exports=router;

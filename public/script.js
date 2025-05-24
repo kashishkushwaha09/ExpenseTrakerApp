@@ -1,4 +1,5 @@
 
+
 const url='http://localhost:4000/api';
 const userAuthDiv=document.getElementById('userAuth');
 const authButton=document.getElementById('auth');
@@ -60,6 +61,35 @@ async function signupUser(userData){
     }
 
 }
+async function handleforgotPass(event){
+  event.preventDefault();
+  const email=event.target.email.value;
+  const response=await axios.post(`${url}/users/password/forgotPassword`,{email});
+  const data= await response.data;
+  alert(data.message);
+
+}
+function forgotPasswordmodule(){
+  localStorage.removeItem('authStatus');
+   const form = document.createElement('form');
+    form.className = 'container mt-5';
+     const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.className = 'btn btn-primary'; 
+    submitButton.innerText = `send email`;
+     form.innerHTML = `
+  <div class="d-flex">
+  <div class="mb-2">
+    <label for="email" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="email" name="email" required>
+  </div>
+        </div>
+`;
+form.appendChild(submitButton);
+userAuthDiv.appendChild(form);
+document.getElementById('forgot-password-btn').remove();
+form.addEventListener('submit',handleforgotPass);
+}
 function authModule() {
    authStatus=localStorage.getItem("authStatus");
     const form = document.createElement('form');
@@ -72,6 +102,9 @@ function authModule() {
     button.type = 'submit';
     button.className = 'btn btn-success align-self-start mt-2';
     button.id="auth";
+
+    const forgotPasswordBtn=document.createElement('button');
+    
 
     if(authStatus==="login"){
    
@@ -124,6 +157,16 @@ authModule();
 form.appendChild(submitButton);
     userAuthDiv.appendChild(form);
     userAuthDiv.appendChild(button)
+    if(authStatus=='login'){
+      forgotPasswordBtn.id='forgot-password-btn';
+      forgotPasswordBtn.className='btn btn-dark p-0 py-1 mt-2 mx-5'
+      forgotPasswordBtn.innerText='Forgot Password';
+      document.querySelector('body').appendChild(forgotPasswordBtn);
+      forgotPasswordBtn.addEventListener('click',()=>{
+        userAuthDiv.innerHTML='';
+        forgotPasswordmodule();
+      })
+    }
  form.addEventListener('submit',handleSubmit);  
 }
 document.addEventListener('DOMContentLoaded',()=>{
