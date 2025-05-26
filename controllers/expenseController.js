@@ -153,15 +153,30 @@ const finalData=totalExpenses.map((expense)=>{
         res.status(500).json({message:error.message});  
     }
 }
-const getDateByPage=async(req,res)=>{
+const getExpensesByPage=async(req,res)=>{
     try {
-        const {page}=req.query;
-        const expenses=await Expense.findAll({where:{UserId:req.user.id}})
+        const page=+req.query.page || 1;
+        const totalExpenses=await Expense.count();
+        console.log("totalExpense ",totalExpenses);
+        const expenses=await Expense.findAll({
+            offset:(page-1)*4,
+            limit:4,
+        where:{UserId:req.user.id}
+        })
+        res.status(200).json({
+            expenses,
+            currentPage:page,
+            hasNextPage:(page*4)<totalExpenses,
+            hasPreviousPage:page>1,
+            lastPage:Math.ceil(totalExpenses/4),
+            nextPage:page+1,
+            previousPage:page-1
+        })
     } catch (error) {
         console.log(error);
         res.status(500).json({message:error.message});  
     }
 }
 module.exports={
-    addExpense,getExpense, deleteExpense, showLeaderboard,groupExpenses
+    addExpense,getExpense,getExpensesByPage, deleteExpense, showLeaderboard,groupExpenses
 }
