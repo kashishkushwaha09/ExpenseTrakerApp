@@ -2,23 +2,7 @@ const { Op } = require('sequelize');
 const User = require('../models/userModel');
 const Expense=require('../models/expenseModel');
 const sequelize = require('../utils/db-connection');
-// amount:{
-//         type:DataTypes.INTEGER,
-//         allowNull:false
-//     },
-//     type: {
-//     type: DataTypes.ENUM('income', 'expense'),
-//     allowNull: false
-//   },
-//     description:{
-//         type:DataTypes.STRING,
-//         allowNull:false
-//     },
-//     category:{
-//         type:DataTypes.ENUM('transport','salary','food','shopping','party','health','education','housing','bills','entertainment','miscellaneous'),
-//         allowNull:false,
-        
-//     },
+
 const addExpense=async(req,res)=>{
     const transaction=await sequelize.transaction();
     try {
@@ -166,6 +150,15 @@ const finalData=totalExpenses.map((expense)=>{
         res.status(200).json({message:"got all group expenses successfully",expenses:finalData});
     } catch (error) {
        console.log(error);
+        res.status(500).json({message:error.message});  
+    }
+}
+const getDateByPage=async(req,res)=>{
+    try {
+        const {page}=req.query;
+        const expenses=await Expense.findAll({where:{UserId:req.user.id}})
+    } catch (error) {
+        console.log(error);
         res.status(500).json({message:error.message});  
     }
 }
