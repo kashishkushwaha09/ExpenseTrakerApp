@@ -53,10 +53,11 @@ async function addExpense(expenseData){
     }
   
 }
-async function fetchExpense(){
+async function fetchExpense(page=1){
     try {
-       const response=await axios.get(`${url}/expenses`);  
-       return response.data.expenses;
+        
+       const response=await axios.get(`${url}/expenses?page=${page}`);  
+       return response.data;
     } catch (error) {
         console.log(error.response?.data || error.message);
         alert(error.response?.data?.message || error.message)
@@ -78,11 +79,11 @@ async function deleteExpense(expense){
         alert(error.response?.data?.message || error.message);
     }
 }
-async function showExpenseList(){
+async function showExpenseList(page){
     const expenseList=document.getElementById('expense-list');
     expenseList.innerHTML='';
-    const expenses=await fetchExpense();
-    expenses.forEach((expense) => {
+    const data=await fetchExpense(page);
+    data.expenses.forEach((expense) => {
         console.log(expense);
        let listElem=document.createElement('li');
     listElem.innerHTML=`Amount: ${expense.amount} Description: ${expense.description} category: ${expense.category}`;
@@ -158,6 +159,28 @@ async function showLeaderboard(){
     document.getElementById('leaderboard').style.display='none';
 }
 }
+async function showPaginationBtns(){
+const expenses=await fetchExpense();
+let totalPages=expenses.lastPage; //4
+ console.log("Pagination ",expenses);
+let buttonList=document.getElementById('pagination-btns');
+for(let i=1; i<=totalPages; i++){
+const li=document.createElement('li');
+li.innerHTML=`
+<button class="page-link">${i}</button>
+`;
+li.classList='page-item';
+const pageBtn=li.querySelector('button');
+pageBtn.addEventListener('click',()=>{
+    showExpenseList(i);
+})
+buttonList.appendChild(li);
+}
+}
+document.addEventListener("DOMContentLoaded",showPaginationBtns);
 document.addEventListener("DOMContentLoaded",handlePremiumFeature)
-document.addEventListener('DOMContentLoaded',showExpenseList);
+document.addEventListener('DOMContentLoaded',()=>{
+    showExpenseList(1);
+});
+
 document.getElementById('pay-button').addEventListener('click',handlePayment);
