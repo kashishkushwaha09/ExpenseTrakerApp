@@ -40,6 +40,7 @@ async function handleSubmit(event){
     const data=await addExpense(expenseData);
     console.log(data);
     alert(data?.message || "something went wrong");
+    showPaginationBtns();
     showExpenseList();
 }
 async function addExpense(expenseData){
@@ -72,6 +73,7 @@ async function deleteExpense(expense){
          console.log("deleted expense ",response);
         if(response.status===200){
             alert(response.data?.message);
+            showPaginationBtns();
             showExpenseList();
         }
     } catch (error) {
@@ -164,14 +166,22 @@ const expenses=await fetchExpense();
 let totalPages=expenses.lastPage; //4
  console.log("Pagination ",expenses);
 let buttonList=document.getElementById('pagination-btns');
+buttonList.innerHTML='';
 for(let i=1; i<=totalPages; i++){
 const li=document.createElement('li');
+if (i === 1) {
+    li.classList.add('active'); 
+  }
 li.innerHTML=`
-<button class="page-link">${i}</button>
+ <button class="page-link">${i}</button>
+
 `;
-li.classList='page-item';
+li.classList.add('page-item');
 const pageBtn=li.querySelector('button');
 pageBtn.addEventListener('click',()=>{
+    const allLis = buttonList.querySelectorAll('li');
+    allLis.forEach(li => li.classList.remove('active'));
+    li.classList.add('active');
     showExpenseList(i);
 })
 buttonList.appendChild(li);
