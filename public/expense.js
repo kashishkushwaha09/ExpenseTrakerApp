@@ -2,6 +2,7 @@ const url='http://localhost:4000/api';
 const token=localStorage.getItem("token");
 const premiumStatus=localStorage.getItem("isPremium");
 let leaderboard=false;
+const select=document.getElementById('item-per-page');
 console.log("premium status ", premiumStatus);
 const cashfree=Cashfree({
     mode:"sandbox"
@@ -41,7 +42,8 @@ async function handleSubmit(event){
     console.log(data);
     alert(data?.message || "something went wrong");
     showPaginationBtns();
-    showExpenseList();
+    const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+    showExpenseList(1,selectedValue);
 }
 async function addExpense(expenseData){
     try {
@@ -54,10 +56,11 @@ async function addExpense(expenseData){
     }
   
 }
-async function fetchExpense(page=1){
+async function fetchExpense(page=1,limit){
     try {
         
-       const response=await axios.get(`${url}/expenses?page=${page}`);  
+
+       const response=await axios.get(`${url}/expenses?page=${page}&limit=${limit}`);  
        return response.data;
     } catch (error) {
         console.log(error.response?.data || error.message);
@@ -74,17 +77,19 @@ async function deleteExpense(expense){
         if(response.status===200){
             alert(response.data?.message);
             showPaginationBtns();
-            showExpenseList();
+            const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+    showExpenseList(1,selectedValue);
+            
         }
     } catch (error) {
         console.log(error.response?.data || error.message);
         alert(error.response?.data?.message || error.message);
     }
 }
-async function showExpenseList(page){
+async function showExpenseList(page,selectedValue){
     const expenseList=document.getElementById('expense-list');
     expenseList.innerHTML='';
-    const data=await fetchExpense(page);
+    const data=await fetchExpense(page,selectedValue);
     data.expenses.forEach((expense) => {
         console.log(expense);
        let listElem=document.createElement('li');
@@ -162,7 +167,8 @@ async function showLeaderboard(){
 }
 }
 async function showPaginationBtns(){
-const expenses=await fetchExpense();
+const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+const expenses=await fetchExpense(1,selectedValue);
 let totalPages=expenses.lastPage; //4
  console.log("Pagination ",expenses);
 let buttonList=document.getElementById('pagination-btns');
@@ -182,15 +188,25 @@ pageBtn.addEventListener('click',()=>{
     const allLis = buttonList.querySelectorAll('li');
     allLis.forEach(li => li.classList.remove('active'));
     li.classList.add('active');
-    showExpenseList(i);
+    const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+    showExpenseList(i,selectedValue);
 })
 buttonList.appendChild(li);
 }
 }
+function handleItemPerPage(){
+     const selectedValue = parseInt(this.value); // e.g., 5, 10, 20
+  console.log("Selected items per page:", selectedValue);
+ localStorage.setItem("selectedValue",selectedValue);
+  // Now use selectedValue to fetch or show data
+  showPaginationBtns();
+  showExpenseList(1, selectedValue); // example function
+}
 document.addEventListener("DOMContentLoaded",showPaginationBtns);
 document.addEventListener("DOMContentLoaded",handlePremiumFeature)
 document.addEventListener('DOMContentLoaded',()=>{
-    showExpenseList(1);
+    const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+    showExpenseList(1,selectedValue);
 });
-
+select.addEventListener('change',handleItemPerPage);
 document.getElementById('pay-button').addEventListener('click',handlePayment);

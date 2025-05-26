@@ -156,19 +156,20 @@ const finalData=totalExpenses.map((expense)=>{
 const getExpensesByPage=async(req,res)=>{
     try {
         const page=+req.query.page || 1;
+        const itemPerPage=+req.query.limit || 4;
         const totalExpenses=await Expense.count();
         console.log("totalExpense ",totalExpenses);
         const expenses=await Expense.findAll({
-            offset:(page-1)*4,
-            limit:4,
+            offset:(page-1)*itemPerPage,
+            limit:itemPerPage,
         where:{UserId:req.user.id}
         })
         res.status(200).json({
             expenses,
             currentPage:page,
-            hasNextPage:(page*4)<totalExpenses,
+            hasNextPage:(page*itemPerPage)<totalExpenses,
             hasPreviousPage:page>1,
-            lastPage:Math.ceil(totalExpenses/4),
+            lastPage:Math.ceil(totalExpenses/itemPerPage),
             nextPage:page+1,
             previousPage:page-1
         })
