@@ -14,21 +14,28 @@
    
   <form class="bg-light p-4 m-auto my-3 rounded flex flex-column align-items-center" onsubmit="handleSubmit(event)" style="width: 50vw;">
         <div class="input-group mb-3">
-            <label class="form-label" for="price">Choose ExpenseAmount: &nbsp;</label> 
-        <input type="number" class="form-control" id="price" name="price"  >
+            <label class="form-label" for="amount">Choose Expense Amount: &nbsp;</label> 
+        <input type="number" class="form-control" id="amount" name="amount"  >
         </div>
         <div class="input-group mb-3"> 
-        <label for="price" class="form-label">Description: &nbsp;</label>
-        <input type="text" class="form-control" id="name" name="description"  >
+        <label for="description" class="form-label">Description: &nbsp;</label>
+        <input type="text" class="form-control" id="description" name="description"  >
         </div>
         <div  class="input-group mb-3">
+<!--'transport','food','shopping','party','health','education','housing','bills','entertainment','miscellaneous' -->
             <label for="category" class="form-label">Choose a category: &nbsp;</label>
             <select class="form-select" id="category" name="category">
-                <option value="electronics" selected>electronics</option>
-                <option value="travel" selected>travel</option>
+                <option value="transport" selected>transport</option>
+                <option value="salary">salary</option>
+                <option value="health">health</option>
                 <option value="food">food</option>
                 <option value="shopping">shopping</option>
                 <option value="party">party</option>
+                <option value="education">education</option>
+                <option value="housing">housing</option>
+                <option value="bills">bills</option>
+                <option value="entertainment">entertainment</option>
+                <option value="miscellaneous">miscellaneous</option>
             </select>
         </div>
         
@@ -44,9 +51,12 @@
         <div class="text-center">
             <button class="btn btn-success mb-2" id="show-leaderboard">Show Leaderboard</button>
         </div> -->
+         <!-- <div class="text-center">
+            
+        </div>  -->
         </div>
    <ul class="container" id='expense-list'></ul>
-
+    
    <div class="container" id='leaderboard' style="display: none;">
     <h1>LeaderBoard</h1>
     <ul class="container" id="leaderboard-list" ></ul>

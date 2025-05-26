@@ -1,15 +1,36 @@
+const { Op } = require('sequelize');
 const User = require('../models/userModel');
 const Expense=require('../models/expenseModel');
 const sequelize = require('../utils/db-connection');
-
+// amount:{
+//         type:DataTypes.INTEGER,
+//         allowNull:false
+//     },
+//     type: {
+//     type: DataTypes.ENUM('income', 'expense'),
+//     allowNull: false
+//   },
+//     description:{
+//         type:DataTypes.STRING,
+//         allowNull:false
+//     },
+//     category:{
+//         type:DataTypes.ENUM('transport','salary','food','shopping','party','health','education','housing','bills','entertainment','miscellaneous'),
+//         allowNull:false,
+        
+//     },
 const addExpense=async(req,res)=>{
     const transaction=await sequelize.transaction();
     try {
         
-       const {price,description,category}=req.body;
+       const {amount,description,category}=req.body;
        console.log(req.user);
-const newExpese=await Expense.create({
-    price,description,category,UserId:(req.user.id)
+       let type= 'expense';
+       if(category==='salary'){
+           type='income';
+       }
+const newExpense=await Expense.create({
+    amount,description,category,UserId:(req.user.id),type
 },
 {transaction:transaction}
 );
@@ -17,8 +38,8 @@ const newExpese=await Expense.create({
 const existingUser=await User.findByPk(req.user.id,
     {transaction:transaction}
 );
-if(existingUser){
-    existingUser.totalExpense = (existingUser.totalExpense || 0) + Number(price);
+if(existingUser && type==='expense'){
+    existingUser.totalExpense = (existingUser.totalExpense || 0) + Number(amount);
     await existingUser.save(
         {transaction:transaction}
     );
@@ -26,7 +47,7 @@ if(existingUser){
     console.log("in addExpense User not found")
 }
 await transaction.commit();
-res.status(201).json({message:"expense created successfully", expense:newExpese}); 
+res.status(201).json({message:"expense created successfully", expense:newExpense}); 
     } catch (error) {
         await transaction.rollback();
         console.log(error);
@@ -53,8 +74,8 @@ const deleteExpense=async(req,res)=>{
         const existingUser=await User.findByPk(req.user.id,
     {transaction:transaction}
 );
-if(existingUser && expense){
-    existingUser.totalExpense = (existingUser.totalExpense || 0) - expense.price;
+if(existingUser && expense && expense.type==='expense'){
+    existingUser.totalExpense = (existingUser.totalExpense || 0) - expense.amount                                                                                                                                                                                                                                               ;
     await existingUser.save(
         {transaction:transaction}
     );
@@ -102,7 +123,52 @@ res.status(200).json({message:"got all expenses successfully",expenses});
         res.status(500).json({message:error.message});
     }
 }
-
+// premium features
+const groupExpenses=async(req,res)=>{
+    try {
+        const month='04';
+        const year='2025';
+        const allExpenses=await Expense.findAll({
+            attributes:['id','amount','description','category','type',
+            [
+                sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y'), 'date'
+            ]],
+            where:{UserId:req.user.id},
+            order:[['updatedAt','ASC']],
+            raw:true
+        });
+        const totalExpenses=await Expense.findAll({
+    attributes:[[sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y'), 'date'],
+    [sequelize.fn('sum',sequelize.literal(`CASE WHEN type='expense' THEN amount ELSE 0 END`)),'totalExpense'],
+[sequelize.fn('sum',sequelize.literal(`CASE WHEN type='income' THEN amount ELSE 0 END`)),'totalIncome']],
+    group:[sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y')],
+    order:[[sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y'),'ASC']],
+    where:{
+        UserId:req.user.id,
+        where: {
+  UserId: req.user.id,
+  [Op.and]: [
+    sequelize.where(sequelize.fn('MONTH', sequelize.col('updatedAt')), month),
+    sequelize.where(sequelize.fn('YEAR', sequelize.col('updatedAt')), year)
+  ]
+}
+    },
+    raw:true
+})
+const finalData=totalExpenses.map((expense)=>{
+    const date=expense.date;
+    const entriesOnThisDate=allExpenses.filter((e)=>e.date===date);
+    return {
+        ...expense,
+        entries:entriesOnThisDate
+    }
+})
+        res.status(200).json({message:"got all group expenses successfully",expenses:finalData});
+    } catch (error) {
+       console.log(error);
+        res.status(500).json({message:error.message});  
+    }
+}
 module.exports={
-    addExpense,getExpense, deleteExpense, showLeaderboard
+    addExpense,getExpense, deleteExpense, showLeaderboard,groupExpenses
 }

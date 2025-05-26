@@ -1,6 +1,7 @@
 const url='http://localhost:4000/api';
 const token=localStorage.getItem("token");
 const premiumStatus=localStorage.getItem("isPremium");
+let leaderboard=false;
 console.log("premium status ", premiumStatus);
 const cashfree=Cashfree({
     mode:"sandbox"
@@ -14,7 +15,11 @@ if(token){
 const orderId=params.get('orderId');
 if(orderId){
     const response=await axios.get(`http://localhost:4000/payment/payment-status/${orderId}`);
-    console.log("response from payment status ",response);
+    console.log("response from payment status ",response.data);
+    if(response.data.status==='success'){
+     localStorage.setItem("isPremium","true");
+     handlePremiumFeature();
+    }
     alert(response.data.status);
 }
     } catch (error) {
@@ -26,11 +31,11 @@ if(orderId){
 
 async function handleSubmit(event){
     event.preventDefault();
-    const price=event.target.price.value;
+    const amount=event.target.amount.value;
     const description=event.target.description.value;
     const category=event.target.category.value;
     const expenseData={
-        price:parseInt(price),description,category
+        amount:parseInt(amount),description,category
     }
     const data=await addExpense(expenseData);
     console.log(data);
@@ -80,7 +85,7 @@ async function showExpenseList(){
     expenses.forEach((expense) => {
         console.log(expense);
        let listElem=document.createElement('li');
-    listElem.innerHTML=`Price: ${expense.price} Description: ${expense.description} category: ${expense.category}`;
+    listElem.innerHTML=`Amount: ${expense.amount} Description: ${expense.description} category: ${expense.category}`;
 
     const deleteBtn=document.createElement('button');
     deleteBtn.innerText='delete expense';
@@ -120,16 +125,22 @@ async function handlePayment(){
 }
 function handlePremiumFeature(){    
     const buyPremiumCard=document.querySelector('.card');
+    const premiumStatus=localStorage.getItem("isPremium");
     if(premiumStatus==="true"){
         buyPremiumCard.innerHTML='';
         buyPremiumCard.innerHTML=`<h3 class="text-center my-4">You are a premium user</h3>
         <div class="text-center">
             <button class="btn btn-success mb-2" id="show-leaderboard">Show Leaderboard</button>
+            <a href='./report.html' class="btn btn-success mb-2" id="show-leaderboard">See Report</a>
         </div> `;
         const showLeaderboardBtn=document.getElementById('show-leaderboard');
-        showLeaderboardBtn.addEventListener('click',showLeaderboard);
+        showLeaderboardBtn.addEventListener('click',()=>{
+            leaderboard=!leaderboard? true : false;
+            showLeaderboard()});
+}
 }
 async function showLeaderboard(){
+   if(leaderboard){
     const response=await axios.get(`${url}/expenses/premium/leaderboard`);
    console.log("leaderboard data ",response.data);
    const leaderboardData=response.data.expenses;
@@ -140,8 +151,11 @@ async function showLeaderboard(){
     const listElem=document.createElement('li');
     listElem.innerHTML=`Name: ${user.name} Total Expense: ${user.totalExpense}`;
     leaderboardList.appendChild(listElem);
+   
    })
 
+}else{
+    document.getElementById('leaderboard').style.display='none';
 }
 }
 document.addEventListener("DOMContentLoaded",handlePremiumFeature)

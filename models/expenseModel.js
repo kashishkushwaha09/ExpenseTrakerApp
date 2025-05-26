@@ -7,19 +7,24 @@ const Expense=sequelize.define('Expenses',{
         allowNull:false,
         autoIncrement:true
     },
-    price:{
+    amount:{
         type:DataTypes.INTEGER,
         allowNull:false
     },
+    type: {
+    type: DataTypes.ENUM('income', 'expense'),
+    allowNull: false
+  },
     description:{
         type:DataTypes.STRING,
         allowNull:false
     },
     category:{
-        type:DataTypes.ENUM('electronics','travel','food','shopping','party'),
+        type:DataTypes.ENUM('transport','salary','food','shopping','party','health','education','housing','bills','entertainment','miscellaneous'),
         allowNull:false,
         
-    }
+    },
+    
 })
 
 
