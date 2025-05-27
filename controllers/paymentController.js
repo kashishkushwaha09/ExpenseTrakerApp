@@ -1,6 +1,7 @@
 const { Cashfree, CFEnvironment } =require("cashfree-pg"); 
-const Order = require("../models/orderModel");
-const User = require("../models/userModel");
+const db = require("../models");
+const Order=db.Orders;
+const User =db.Users;
 
 const cashfree = new Cashfree(CFEnvironment.SANDBOX,process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
 

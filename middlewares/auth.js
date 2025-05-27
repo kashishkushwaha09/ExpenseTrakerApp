@@ -1,6 +1,6 @@
 const jwt=require('jsonwebtoken');
 const SECRET_KEY='afab7a6b4b778789b93333dfb8e25f7f6299ee7602e414a47f420b12d1470d09';
-const User=require('../models/userModel');
+const User=require('../models').Users;
 const authenticateUser=async (req,res,next)=>{
     const authHeader=req.headers.authorization;
     if(!authHeader || !authHeader.startsWith('Bearer '))

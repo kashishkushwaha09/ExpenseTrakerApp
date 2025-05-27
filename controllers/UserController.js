@@ -1,8 +1,9 @@
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+const db = require('../models');
+const User = db.Users;
 
-const User= require('../models/userModel');
 
 
 const signUpUser=async(req,res)=>{  

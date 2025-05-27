@@ -8,7 +8,8 @@ const expenseRoutes=require('./routes/expenseRoutes');
 const Order=require('./models/orderModel');
 const paymentRoutes=require('./routes/paymentRoutes');
 const passwordRoutes=require('./routes/passwordRoutes');
-require('./models');
+const db2 = require('./models'); // Loads all models
+// require('./models/assoscleiation')(db2); // Now call the association function
 
 app.use(express.static('public'));
 app.use(express.json());

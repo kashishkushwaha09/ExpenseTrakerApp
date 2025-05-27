@@ -35,8 +35,9 @@ async function handleSubmit(event){
     const amount=event.target.amount.value;
     const description=event.target.description.value;
     const category=event.target.category.value;
+    const note=event.target.note.value;
     const expenseData={
-        amount:parseInt(amount),description,category
+        amount:parseInt(amount),description,category,note
     }
     const data=await addExpense(expenseData);
     console.log(data);

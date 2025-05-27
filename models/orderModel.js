@@ -1,6 +1,7 @@
 const {DataTypes}=require('sequelize');
 const sequelize= require('../utils/db-connection')
 
+module.exports=(sequelize,DataTypes)=>{
 const Order=sequelize.define('Orders',{
     id:{
         type:DataTypes.INTEGER,
@@ -22,5 +23,6 @@ const Order=sequelize.define('Orders',{
         allowNull:false,
         defaultValue:'pending'
     },
-})
-module.exports=Order;
+});
+return Order;
+}

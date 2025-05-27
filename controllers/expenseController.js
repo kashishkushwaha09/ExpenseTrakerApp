@@ -1,20 +1,24 @@
 const { Op } = require('sequelize');
-const User = require('../models/userModel');
-const Expense=require('../models/expenseModel');
+// const User = require('../models/userModel');
+// const Expense=require('../models/expenseModel');
 const sequelize = require('../utils/db-connection');
-
+const db = require('../models');
+const Expense = db.Expenses;
+const User=db.Users;
+console.log(User);
 const addExpense=async(req,res)=>{
     const transaction=await sequelize.transaction();
     try {
-        
-       const {amount,description,category}=req.body;
+        console.log(Expense);
+        console.log(User);
+       const {amount,description,category,note}=req.body;
        console.log(req.user);
        let type= 'expense';
        if(category==='salary'){
            type='income';
        }
 const newExpense=await Expense.create({
-    amount,description,category,UserId:(req.user.id),type
+    amount,description,category,UserId:(req.user.id),type,note
 },
 {transaction:transaction}
 );

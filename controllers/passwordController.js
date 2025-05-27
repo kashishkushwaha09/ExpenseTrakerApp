@@ -2,7 +2,8 @@ const SibApiV3Sdk = require('sib-api-v3-sdk');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const bcrypt=require('bcrypt');
-const User=require('../models/userModel');
+const db=require('../models');
+const User=db.Users;
 const ForgotPasswordRequest=require('../models/forgotPasswordRequests');
 
 const forgotPassword=async(req,res)=>{

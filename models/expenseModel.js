@@ -1,5 +1,7 @@
 const {DataTypes}=require('sequelize');
 const sequelize=require('../utils/db-connection');
+
+module.exports=(sequelize,DataTypes)=>{
 const Expense=sequelize.define('Expenses',{
     id:{
         type:DataTypes.INTEGER,
@@ -24,8 +26,17 @@ const Expense=sequelize.define('Expenses',{
         allowNull:false,
         
     },
+    note:{
+        type:DataTypes.STRING,
+        allowNull:true
+    }
     
-})
+});
+Expense.associate = (models) => {
+    Expense.belongsTo(models.Users);
+  };
+
+return Expense;
+}
 
 
-module.exports=Expense;

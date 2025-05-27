@@ -1,6 +1,6 @@
 const {DataTypes}=require('sequelize');
 const sequelize= require('../utils/db-connection')
-
+module.exports=(sequelize,DataTypes)=>{
 const User=sequelize.define('Users',{
     id:{
         type:DataTypes.INTEGER,
@@ -29,5 +29,11 @@ const User=sequelize.define('Users',{
         type:DataTypes.INTEGER,
         defaultValue:0
     }
-})
-module.exports=User;
+});
+  User.associate = (models) => {
+    User.hasMany(models.Expenses);
+    User.hasMany(models.ForgotPasswordRequests);
+  };
+return User;
+}
+
