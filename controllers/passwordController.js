@@ -16,7 +16,7 @@ var apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.MAILING_API_KEY;
 var tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 const sender={
-    email:'kkachhi178@gmail.com',
+    email:process.env.MY_EMAIL,
     name:"khushboo kachhi"
 }
 const receivers=[

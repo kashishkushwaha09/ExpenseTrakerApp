@@ -1,0 +1,2 @@
+::1 - - [27/May/2025:18:09:10 +0000] "GET /api/expenses?page=1&limit=5 HTTP/1.1" 304 - "http://localhost:4000/expense.html" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+::1 - - [27/May/2025:18:09:10 +0000] "GET /api/expenses?page=1&limit=5 HTTP/1.1" 304 - "http://localhost:4000/expense.html" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
