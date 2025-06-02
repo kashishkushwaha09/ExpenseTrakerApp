@@ -57,12 +57,12 @@ async function addExpense(expenseData){
     }
   
 }
-async function fetchExpense(page=1,limit){
+async function fetchExpense(page=1,limit=4){
     try {
-        
 
-       const response=await axios.get(`${url}/expenses?page=${page}&limit=${limit}`);  
-       return response.data;
+       const response=await axios.get(`${url}/expenses?page=${page}&limit=${limit}`); 
+       console.log("response from fetch expense ",response.data); 
+       return response.data.expenses;
     } catch (error) {
         console.log(error.response?.data || error.message);
         alert(error.response?.data?.message || error.message)
@@ -91,6 +91,17 @@ async function showExpenseList(page,selectedValue){
     const expenseList=document.getElementById('expense-list');
     expenseList.innerHTML='';
     const data=await fetchExpense(page,selectedValue);
+    console.log(data.expenses);
+    if(data?.expenses?.length===0){
+     select.style.display='none';
+       let listElem=document.createElement('li');
+    listElem.innerHTML=`<h1>Add items in list</h1>`;
+    listElem.style.listStyleType='none';
+    expenseList.appendChild(listElem);
+    }else{
+      select.style.display='block';  
+      expenseList.innerHTML='';
+    }
     data.expenses.forEach((expense) => {
         console.log(expense);
        let listElem=document.createElement('li');
@@ -197,6 +208,13 @@ buttonList.appendChild(li);
 }
 function handleItemPerPage(){
      const selectedValue = parseInt(this.value); // e.g., 5, 10, 20
+ for (let option of select.options) {
+  if (option.value === selectedValue) {
+    option.selected = true;
+    break;
+  }
+}
+
   console.log("Selected items per page:", selectedValue);
  localStorage.setItem("selectedValue",selectedValue);
   // Now use selectedValue to fetch or show data
@@ -207,6 +225,12 @@ document.addEventListener("DOMContentLoaded",showPaginationBtns);
 document.addEventListener("DOMContentLoaded",handlePremiumFeature)
 document.addEventListener('DOMContentLoaded',()=>{
     const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+    for (let option of select.options) {
+  if (option.value ==selectedValue) {
+    option.selected = true;
+    break;
+  }
+}
     showExpenseList(1,selectedValue);
 });
 select.addEventListener('change',handleItemPerPage);

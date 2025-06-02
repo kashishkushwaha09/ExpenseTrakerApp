@@ -33,6 +33,7 @@ const User=sequelize.define('Users',{
   User.associate = (models) => {
     User.hasMany(models.Expenses);
     User.hasMany(models.ForgotPasswordRequests);
+    User.hasMany(models.OlderFiles);
   };
 return User;
 }

@@ -14,6 +14,7 @@ async function handleSubmit(event) {
     }
     // login function
       response= await loginUser(userData);
+       if(response)
       alert(response.message || "user Login successfully");
      
     localStorage.setItem("token",response.token);
@@ -28,8 +29,10 @@ async function handleSubmit(event) {
         password: event.target.password.value
     }
     response=await signupUser(userData);
+    console.log(response);
      localStorage.setItem("authStatus","login");
      userAuthDiv.innerHTML='';
+     if(response)
      alert(response.message || "user Signup successfully");
    }
     
@@ -45,7 +48,7 @@ async function loginUser(userData){
     } catch (error) {
         console.log(error.response?.data || error.message);
         alert(error.response?.data?.message ||`Something went wrong: ${error.message}`);
-        return null;
+        
     }
 
 }
@@ -57,16 +60,24 @@ async function signupUser(userData){
     } catch (error) {
         console.log(error.response?.data || error.message);
         alert(error.response?.data?.message ||`Something went wrong: ${error.message}`);
-        return null;
+       
     }
 
 }
 async function handleforgotPass(event){
   event.preventDefault();
   const email=event.target.email.value;
-  const response=await axios.post(`http://localhost:4000/password/forgotPassword`,{email});
+  try {
+    const response=await axios.post(`http://localhost:4000/password/forgotPassword`,{email});
   const data= await response.data;
   alert(data.message);
+  } catch (error) {
+    console.log(error);
+    alert(`Something went wrong: ${error.message}`);
+    return;
+    
+  }
+  
 
 }
 function forgotPasswordmodule(){
@@ -166,6 +177,11 @@ form.appendChild(submitButton);
         userAuthDiv.innerHTML='';
         forgotPasswordmodule();
       })
+    }else{
+      const forgotPasswordBtn=document.getElementById('forgot-password-btn');
+      if(forgotPasswordBtn){
+        forgotPasswordBtn.remove();
+      }
     }
  form.addEventListener('submit',handleSubmit);  
 }

@@ -1,3 +1,5 @@
+
+
 const transactions =[
   { "id": 35, "date": "01-03-2024", "description": "March Salary", "category": "salary", "amount": 20000, "type": "income" },
   { "id": 34, "date": "05-03-2024", "description": "Book Purchase", "category": "education", "amount": 400, "type": "expense" },
@@ -107,7 +109,58 @@ if(viewMode==='daily'){
     expenseList.appendChild(row);
 }
 
+function download(){
+  axios.get('http://localhost:4000/api/expenses/premium/download', {
+    headers:{
+      "Authorization":`Bearer ${localStorage.getItem('token')}`
+    }
+  }).then((response)=>{
+    if(response.status===200){
+  
+      const a = document.createElement('a');
+      a.href = response.data.fileUrl;
+      a.download = 'expenses.csv';
+      document.body.appendChild(a);
+      a.click();
 
+    }else{
+      alert('Failed to download the file');
+      throw new Error('Failed to download the file');
+    }
+  }).catch((error)=>{
+    console.log(error);
+  });
+}
+function downloadOlderFiles(){
+  axios.get('http://localhost:4000/api/expenses/premium/older-files/download', {
+    headers:{
+      "Authorization":`Bearer ${localStorage.getItem('token')}`
+    }
+  }).then((response)=>{
+    if(response.status===200){
+  // <ul class="dropdown-menu">
+  //   <li><a class="dropdown-item" href="#">Action</a></li>
+  // </ul>
+      const olderFiles=response.data.olderFiles;
+      const dropdownMenu = document.querySelector('.dropdown-menu');
+      dropdownMenu.innerHTML = ''; 
+      if(olderFiles?.length===0){
+        dropdownMenu.innerHTML='<li><a class="dropdown-item" href="#">No older files available</a></li>';
+        return;
+      }
+      olderFiles.forEach(file => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a class="dropdown-item" href="${file.filePath}" download="${file.fileName}">${file.fileName}</a>`;
+        dropdownMenu.appendChild(li);
+      });
+    }else{
+      alert('Failed to download the file');
+      throw new Error('Failed to download the file');
+    }
+  }).catch((error)=>{
+    console.log(error);
+  });
+}
 document.getElementById('view-mode').addEventListener('change',function(){
 const selectMode=this.value;
 showExpenseList(selectMode); 

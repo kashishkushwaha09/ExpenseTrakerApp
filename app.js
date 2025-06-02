@@ -12,7 +12,7 @@ const paymentRoutes=require('./routes/paymentRoutes');
 const passwordRoutes=require('./routes/passwordRoutes');
 const db2 = require('./models'); 
 const morgan=require('morgan');
-
+const errorMiddleware=require('./middlewares/errorHandler');
 
 const accessLogStream=fs.createWriteStream(
     path.join(__dirname,'access.log'),
@@ -26,7 +26,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/expenses',expenseRoutes);
 app.use('/payment',paymentRoutes);
 app.use('/password',passwordRoutes);
-
+app.use(errorMiddleware);
 
 db.sync({alter:true}).then(()=>{
     app.listen(process.env.DB_PORT || 4000,()=>{
