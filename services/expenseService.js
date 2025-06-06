@@ -113,49 +113,36 @@ return expenses;
     }
 }
 // premium features
-const groupExpenses=async(req,res)=>{
+const groupExpenses=async(viewMode='all')=>{
     try {
-        const month='04';
-        const year='2025';
-        const allExpenses=await Expense.findAll({
-            attributes:['id','amount','description','category','type',
-            [
-                sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y'), 'date'
-            ]],
-            where:{UserId:req.user.id},
-            order:[['updatedAt','ASC']],
-            raw:true
-        });
-        const totalExpenses=await Expense.findAll({
-    attributes:[[sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y'), 'date'],
-    [sequelize.fn('sum',sequelize.literal(`CASE WHEN type='expense' THEN amount ELSE 0 END`)),'totalExpense'],
-[sequelize.fn('sum',sequelize.literal(`CASE WHEN type='income' THEN amount ELSE 0 END`)),'totalIncome']],
-    group:[sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y')],
-    order:[[sequelize.fn('date_format', sequelize.col('updatedAt'), '%d-%m-%y'),'ASC']],
-    where:{
-        UserId:req.user.id,
-        where: {
-  UserId: req.user.id,
-  [Op.and]: [
-    sequelize.where(sequelize.fn('MONTH', sequelize.col('updatedAt')), month),
-    sequelize.where(sequelize.fn('YEAR', sequelize.col('updatedAt')), year)
-  ]
+        const endDay = new Date();
+endDay.setHours(23, 59, 59, 999);
+let startDay= new Date(endDay);
+if(viewMode==='weekly'){
+startDay.setDate(endDay.getDate() - 6);
+}else if(viewMode==='daily'){
+startDay.setDate(endDay.getDate());
+}else if(viewMode==='monthly'){
+startDay.setMonth(startDay.getMonth()-1);
 }
-    },
-    raw:true
-})
-const finalData=totalExpenses.map((expense)=>{
-    const date=expense.date;
-    const entriesOnThisDate=allExpenses.filter((e)=>e.date===date);
-    return {
-        ...expense,
-        entries:entriesOnThisDate
+startDay.setHours(0, 0, 0, 0);
+let whereCondition = {};
+
+if(viewMode === 'daily' || viewMode === 'weekly' || viewMode === 'monthly') {
+  whereCondition = {
+    updatedAt: {
+      [Op.between]: [startDay, endDay]
     }
-})
-        res.status(200).json({message:"got all group expenses successfully",expenses:finalData});
+  };
+}
+       const allExpenses=await Expense.findAll({
+          where:whereCondition,
+        attributes:['id','amount','type','description','category',[sequelize.literal(`DATE_FORMAT(updatedAt,'%d-%m-%Y')`),'date']]
+       })
+       return allExpenses;
     } catch (error) {
-       console.log(error);
-        res.status(500).json({message:error.message});  
+    console.log(error);
+    throw new AppError(error.message, 500);
     }
 }
 const getExpensesByPage=async(page=1,limit=4,userId)=>{
@@ -164,10 +151,12 @@ const getExpensesByPage=async(page=1,limit=4,userId)=>{
         const expenses=await Expense.findAll({
             offset:(page-1)*limit,
             limit:limit,
-        where:{UserId:userId}
+        where:{UserId:userId},
+        raw:true
         })
-         const totalExpenses=expenses.length;
-        console.log("totalExpenses ",expenses);
+         const totalExpenses=await Expense.count();
+        console.log("getExpensesByPage totalExpenses ",totalExpenses);
+         console.log("getExpensesByPage Expenses ",expenses);
        return {
             expenses,
             currentPage:page,

@@ -120,6 +120,19 @@ const getOlderFiles = async (req, res) => {
              throw new AppError(error.message, 500);
     }
 }
+const groupExpenses=async (req,res)=>{
+    try {
+        const {viewMode}=req.query;
+        const allExpenses=await expenseService.groupExpenses(viewMode);
+        return res.status(200).json({allExpenses});
+    } catch (error) {
+        console.log(error);
+             if(error instanceof AppError){
+               throw error;
+             }
+             throw new AppError(error.message, 500);
+    }
+}
 module.exports = {
-    addExpense, getExpense, getExpensesByPage, deleteExpense, showLeaderboard, getReportDownload, getOlderFiles
+    addExpense, getExpense, groupExpenses, getExpensesByPage, deleteExpense, showLeaderboard, getReportDownload, getOlderFiles
 }

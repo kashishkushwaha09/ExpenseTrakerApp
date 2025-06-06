@@ -14,14 +14,18 @@ async function handleSubmit(event) {
     }
     // login function
       response= await loginUser(userData);
-       if(response)
-      alert(response.message || "user Login successfully");
+       if(response){
+          alert(response.message || "user Login successfully");
      
     localStorage.setItem("token",response.token);
     localStorage.setItem("isPremium",response.user.isPremium);
       window.location.assign('expense.html');
       userAuthDiv.innerHTML='';
       localStorage.removeItem('authStatus');
+       }else{
+        alert('something went wrong')
+       }
+    
    }else{
     userData={
         name: event.target.name.value,
@@ -34,6 +38,7 @@ async function handleSubmit(event) {
      userAuthDiv.innerHTML='';
      if(response)
      alert(response.message || "user Signup successfully");
+    else alert('something went wrong')
    }
     
    

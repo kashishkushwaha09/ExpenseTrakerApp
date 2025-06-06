@@ -37,50 +37,32 @@ const transactions =[
   { "id": 1, "date": "26-05-2025", "description": "Uber ride", "category": "transport", "amount": 150, "type": "expense" },
   { "id": 2, "date": "26-05-2025", "description": "Salary (May)", "category": "salary", "amount": 25000, "type": "income" }
 ];
-// console.log(transactions);
-const month='05',year='2025';
-function showExpenseList(viewMode='all') {
-   console.log('Selected mode:', viewMode); 
-const expenseList= document.getElementById('expense-row'); // tbody
-expenseList.innerHTML = '';
-let filteredTransactions;
-if(viewMode==='daily'){
-  const today=new Date();
-  const date=today.getDate();
-  const month='0'+(today.getMonth()+1);
-  const year=today.getFullYear();
-  let todayDate=[date,month,year].join('-');
-  console.log(todayDate);
 
- filteredTransactions=transactions.filter((transaction)=>{
-  return transaction.date===todayDate;
-})
-}else if(viewMode==='all'){
-  filteredTransactions=transactions;
-}else if(viewMode==='weekly'){
-  const today=new Date();
-  today.setHours(0,0,0,0);
-  const sevenDaysAgo=new Date(today);
-  sevenDaysAgo.setDate(today.getDate()-6);
-  filteredTransactions=transactions.filter((transaction)=>{
-    const [day,month,year]=transaction.date.split('-');
-    const transactionDate=new Date(`${year}-${month}-${day}`);
-    transactionDate.setHours(0,0,0,0);
-    return transactionDate>=sevenDaysAgo && transactionDate<=today;
-  })
- 
-}else if(viewMode==='monthly'){
-   const today = new Date();
-  const currentMonth = today.getMonth(); 
-  const currentYear = today.getFullYear();
-   filteredTransactions = transactions.filter(transaction => {
-    const [day, month, year] = transaction.date.split('-');
-    const transactionMonth = parseInt(month) - 1;
-    const transactionYear = parseInt(year);
-    return transactionMonth === currentMonth && transactionYear === currentYear;
-  });
- 
+async function fetchExpense(viewMode){
+    try {
+
+    const response=await axios.get(`http://localhost:4000/api/expenses/premium/groupExpense`,{
+    headers:{
+      "Authorization":`Bearer ${localStorage.getItem('token')}`
+    },
+     params: {
+    viewMode: viewMode
+  }
+  }); 
+       console.log("response from fetch expense ",response.data); 
+       return response.data.allExpenses;
+    } catch (error) {
+        console.log(error.response?.data || error.message);
+        alert(error.response?.data?.message || error.message)
+         return null;
+    }
+  
 }
+async function showExpenseList(viewMode='all') {
+  const expenseList=document.getElementById('expense-row');
+  expenseList.innerHTML='';
+ let filteredTransactions=await fetchExpense(viewMode);
+ console.log(filteredTransactions);
  let totalExpense=0,totalIncome=0;
   filteredTransactions.forEach((transaction)=>{
      if(transaction.type==='income'){

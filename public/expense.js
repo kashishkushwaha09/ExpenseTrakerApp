@@ -92,7 +92,8 @@ async function showExpenseList(page,selectedValue){
     expenseList.innerHTML='';
     const data=await fetchExpense(page,selectedValue);
     console.log(data.expenses);
-    if(data?.expenses?.length===0){
+    if(data?.expenses){
+      if(data.expenses.length===0){
      select.style.display='none';
        let listElem=document.createElement('li');
     listElem.innerHTML=`<h1>Add items in list</h1>`;
@@ -100,10 +101,9 @@ async function showExpenseList(page,selectedValue){
     expenseList.appendChild(listElem);
     }else{
       select.style.display='block';  
-      expenseList.innerHTML='';
-    }
-    data.expenses.forEach((expense) => {
-        console.log(expense);
+    //   expenseList.innerHTML='';
+        data.expenses.forEach((expense) => {
+        // console.log(expense);
        let listElem=document.createElement('li');
     listElem.innerHTML=`Amount: ${expense.amount} Description: ${expense.description} category: ${expense.category}`;
 
@@ -115,7 +115,11 @@ async function showExpenseList(page,selectedValue){
     expenseList.appendChild(listElem); 
     expenseList.appendChild(deleteBtn);
     });
+    }
+  
     document.querySelector('body').appendChild(expenseList);
+    }
+  
    
 
 }
@@ -181,14 +185,16 @@ async function showLeaderboard(){
 async function showPaginationBtns(){
 const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
 const expenses=await fetchExpense(1,selectedValue);
+// console.log("expenses ",expenses) 
 let totalPages=expenses.lastPage; //4
- console.log("Pagination ",expenses);
+//  console.log("Pagination ",expenses);
 let buttonList=document.getElementById('pagination-btns');
 buttonList.innerHTML='';
 for(let i=1; i<=totalPages; i++){
 const li=document.createElement('li');
-if (i === 1) {
+if (i === 1) {      // be active already
     li.classList.add('active'); 
+    showExpenseList(1,selectedValue);
   }
 li.innerHTML=`
  <button class="page-link">${i}</button>
@@ -219,19 +225,21 @@ function handleItemPerPage(){
  localStorage.setItem("selectedValue",selectedValue);
   // Now use selectedValue to fetch or show data
   showPaginationBtns();
-  showExpenseList(1, selectedValue); // example function
+ 
 }
-document.addEventListener("DOMContentLoaded",showPaginationBtns);
+document.addEventListener("DOMContentLoaded",()=>{
+    localStorage.removeItem('selectedValue');
+    showPaginationBtns()});
 document.addEventListener("DOMContentLoaded",handlePremiumFeature)
-document.addEventListener('DOMContentLoaded',()=>{
-    const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
-    for (let option of select.options) {
-  if (option.value ==selectedValue) {
-    option.selected = true;
-    break;
-  }
-}
-    showExpenseList(1,selectedValue);
-});
+// document.addEventListener('DOMContentLoaded',()=>{
+//     const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
+//     for (let option of select.options) {
+//   if (option.value ==selectedValue) {
+//     option.selected = true;
+//     break;
+//   }
+// }
+//     showExpenseList(1,selectedValue);
+// });
 select.addEventListener('change',handleItemPerPage);
 document.getElementById('pay-button').addEventListener('click',handlePayment);
