@@ -7,12 +7,28 @@ Visit: [http://3.7.70.221/](http://3.7.70.221/)
 ExpenseTrackerApp/
 
 ├── models/
+
 ├── routes/
+
 ├── controllers/
+
 ├── middlewares/
+
 ├── public/
+
 ├── app.js
+
 ├── utils/
+
 ├── package.json
+
 └── README.md
+
+##  Tech Stack
+
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: Node.js, Express
+- **Database**: MySQL
+- **Authentication**: JWT
+- **Deployment**: AWS EC2,AWS s3,Aws RDS, PM2, Jenkins, Nginx
 
