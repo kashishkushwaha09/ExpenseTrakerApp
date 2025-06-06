@@ -7,20 +7,12 @@ Visit: [http://3.7.70.221/](http://3.7.70.221/)
 ExpenseTrackerApp/
 
 ├── models/
-
 ├── routes/
-
 ├── controllers/
-
 ├── middlewares/
-
 ├── public/
-
 ├── app.js
-
 ├── utils/
-
 ├── package.json
-
 └── README.md
 
