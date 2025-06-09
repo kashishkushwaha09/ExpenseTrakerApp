@@ -1,4 +1,4 @@
-const url='http://localhost:4000/api';
+const url='/api';
 const token=localStorage.getItem("token");
 const premiumStatus=localStorage.getItem("isPremium");
 let leaderboard=false;
@@ -17,7 +17,7 @@ if(token){
         const params=new URLSearchParams(window.location.search);
 const orderId=params.get('orderId');
 if(orderId){
-    const response=await axios.get(`http://localhost:4000/payment/payment-status/${orderId}`);
+    const response=await axios.get(`/payment/payment-status/${orderId}`);
     console.log("response from payment status ",response.data);
     if(response.data.status==='success'){
      localStorage.setItem("isPremium","true");
@@ -168,7 +168,7 @@ async function showExpenseList(page,selectedValue){
 async function handlePayment(){
     try {
         // fetch payment session id from backend
-        const response=await axios.post(`http://localhost:4000/payment/create-order`,{
+        const response=await axios.post(`/payment/create-order`,{
             orderId:Math.random().toString(36).substring(2, 15),
             orderAmount:1.00,
             orderCurrency:'INR',

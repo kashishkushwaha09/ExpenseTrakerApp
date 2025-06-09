@@ -5,7 +5,7 @@
 async function fetchExpense(viewMode){
     try {
 
-    const response=await axios.get(`http://localhost:4000/api/expenses/premium/groupExpense`,{
+    const response=await axios.get(`/api/expenses/premium/groupExpense`,{
     headers:{
       "Authorization":`Bearer ${localStorage.getItem('token')}`
     },
@@ -56,7 +56,7 @@ async function showExpenseList(viewMode='all') {
 }
 
 function download(){
-  axios.get('http://localhost:4000/api/expenses/premium/download', {
+  axios.get('/api/expenses/premium/download', {
     headers:{
       "Authorization":`Bearer ${localStorage.getItem('token')}`
     }
@@ -78,7 +78,7 @@ function download(){
   });
 }
 function downloadOlderFiles(){
-  axios.get('http://localhost:4000/api/expenses/premium/older-files/download', {
+  axios.get('/api/expenses/premium/older-files/download', {
     headers:{
       "Authorization":`Bearer ${localStorage.getItem('token')}`
     }

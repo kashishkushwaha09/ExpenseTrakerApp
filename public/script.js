@@ -1,6 +1,6 @@
 
 
-const url='http://localhost:4000/api';
+const url='/api';
 const userAuthDiv=document.getElementById('userAuth');
 const authButton=document.getElementById('auth');
  let authStatus=localStorage.getItem("authStatus");
@@ -73,7 +73,7 @@ async function handleforgotPass(event){
   event.preventDefault();
   const email=event.target.email.value;
   try {
-    const response=await axios.post(`http://localhost:4000/password/forgotPassword`,{email});
+    const response=await axios.post(`/password/forgotPassword`,{email});
   const data= await response.data;
   alert(data.message);
   } catch (error) {
