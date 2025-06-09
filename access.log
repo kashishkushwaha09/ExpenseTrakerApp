@@ -30,3 +30,7 @@
 ::1 - - [09/Jun/2025:09:07:56 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
 ::1 - - [09/Jun/2025:09:08:14 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
 ::1 - - [09/Jun/2025:09:08:14 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+::1 - - [09/Jun/2025:09:10:29 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+::1 - - [09/Jun/2025:09:10:29 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+::1 - - [09/Jun/2025:09:10:39 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+::1 - - [09/Jun/2025:09:10:39 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
