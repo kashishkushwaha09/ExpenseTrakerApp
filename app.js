@@ -29,7 +29,7 @@ app.use('/password',passwordRoutes);
 app.use(errorMiddleware);
 
 db.sync({alter:true}).then(()=>{
-    app.listen(process.env.DB_PORT || 4000,()=>{
+    app.listen(process.env.DB_PORT || 4000,'0.0.0.0',()=>{
     console.log("server is listening on port 4000");
     console.log("adding more logs");
 })
