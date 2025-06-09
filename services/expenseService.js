@@ -67,6 +67,7 @@ const editExpense = async (id, userId,expenseObj) => {
              expense.amount=expenseObj.amount;
             expense.description=expenseObj.description;
             expense.category=expenseObj.category;
+            expense.note=expenseObj.note;
             expense.type=type;
            await expense.save( { transaction: transaction });
          await transaction.commit();

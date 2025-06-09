@@ -59,7 +59,7 @@ async function handleSubmit(event){
         const form=document.querySelector('form');
         form.querySelector('button').innerText='Add Expense';
     }
-    alert(data?.message || "something went wrong");
+    alert(data?.message);
     showPaginationBtns();
 }
 async function addExpense(expenseData){
