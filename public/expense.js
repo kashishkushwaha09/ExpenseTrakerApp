@@ -4,6 +4,8 @@ const premiumStatus=localStorage.getItem("isPremium");
 let leaderboard=false;
 const select=document.getElementById('item-per-page');
 console.log("premium status ", premiumStatus);
+console.log("🧪 Latest expense.js loaded");
+
 const cashfree=Cashfree({
     mode:"sandbox"
 })
