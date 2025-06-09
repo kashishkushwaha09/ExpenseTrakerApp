@@ -35,6 +35,24 @@ const getExpense = async (req, res) => {
     }
 
 }
+const editExpense=async(req,res)=>{
+    try {
+         const { id } = req.params;
+         const expenseData=req.body;
+        const editExpense = await expenseService.editExpense(id, req.user.id,expenseData);
+        if (editExpense) {
+            res.status(200).json({ message: 'Expense updated Successfully!',expense:editExpense });
+        } else {
+            throw new AppError("Expense not found", 404);
+        }
+    } catch (error) {
+         console.log(error);
+        if (error instanceof AppError) {
+            throw error;
+        }
+        throw new AppError(error.message, 500);
+    }
+}
 const deleteExpense = async (req, res) => {
     try {
         const { id } = req.params;
@@ -134,5 +152,5 @@ const groupExpenses=async (req,res)=>{
     }
 }
 module.exports = {
-    addExpense, getExpense, groupExpenses, getExpensesByPage, deleteExpense, showLeaderboard, getReportDownload, getOlderFiles
+    addExpense, getExpense, groupExpenses, getExpensesByPage, deleteExpense,editExpense, showLeaderboard, getReportDownload, getOlderFiles
 }

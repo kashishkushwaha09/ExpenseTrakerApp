@@ -39,12 +39,28 @@ async function handleSubmit(event){
     const expenseData={
         amount:parseInt(amount),description,category,note
     }
-    const data=await addExpense(expenseData);
-    console.log(data);
+    let editId=sessionStorage.getItem('editId');
+    
+    let data;
+
+    if(editId){
+      
+         data=await editExpense(parseInt(editId),expenseData);
+    }else{
+        data=await addExpense(expenseData);
+    }
+     
+    if(data){
+         sessionStorage.removeItem('editId');
+        document.getElementById('amount').value='';
+        document.getElementById('description').value='';
+        document.getElementById('note').value='';
+        document.getElementById('category').value='';
+        const form=document.querySelector('form');
+        form.querySelector('button').innerText='Add Expense';
+    }
     alert(data?.message || "something went wrong");
     showPaginationBtns();
-    const selectedValue=parseInt(localStorage.getItem("selectedValue")) || 4;
-    showExpenseList(1,selectedValue);
 }
 async function addExpense(expenseData){
     try {
@@ -87,6 +103,16 @@ async function deleteExpense(expense){
         alert(error.response?.data?.message || error.message);
     }
 }
+async function editExpense(editId,expenseData){
+    try {
+         const response=await axios.put(`${url}/expenses/${editId}`,expenseData);
+         console.log("edit expense ",response);
+         return response.data;
+    } catch (error) {
+         console.log(error.response?.data || error.message);
+         alert("edit expense failed !");
+    }
+}
 async function showExpenseList(page,selectedValue){
     const expenseList=document.getElementById('expense-list');
     expenseList.innerHTML='';
@@ -109,11 +135,25 @@ async function showExpenseList(page,selectedValue){
 
     const deleteBtn=document.createElement('button');
     deleteBtn.innerText='delete expense';
+    deleteBtn.className='btn mx-2 btn-danger p-1'
     deleteBtn.addEventListener('click',()=>{
      deleteExpense(expense);
     })
+    const editBtn=document.createElement('button');
+    editBtn.innerText='edit expense';
+    editBtn.className='btn btn-success p-1'
+    editBtn.addEventListener('click',()=>{
+        sessionStorage.setItem('editId',expense.id);
+        document.getElementById('amount').value=expense.amount;
+        document.getElementById('description').value=expense.description;
+        document.getElementById('note').value=expense.note;
+        document.getElementById('category').value=expense.category;
+        const form=document.querySelector('form');
+        form.querySelector('button').innerText='Update Expense';
+    })
     expenseList.appendChild(listElem); 
     expenseList.appendChild(deleteBtn);
+    expenseList.appendChild(editBtn);
     });
     }
   

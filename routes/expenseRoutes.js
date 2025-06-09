@@ -11,6 +11,7 @@ router.get('/premium/leaderboard',authenticateUser,expenseController.showLeaderb
 // router.get('/premium/report',authenticateUser,expenseController.groupExpenses);
 router.post('/',authenticateUser,expenseController.addExpense);
 router.delete('/:id',authenticateUser,expenseController.deleteExpense);
+router.put('/:id',authenticateUser,expenseController.editExpense);
 
 
 
