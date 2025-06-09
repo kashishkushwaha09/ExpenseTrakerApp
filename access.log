@@ -1,0 +1,3 @@
+127.0.0.1 - - [09/Jun/2025:10:38:26 +0000] "POST /api/users/login HTTP/1.1" 200 510 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+127.0.0.1 - - [09/Jun/2025:10:38:31 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+127.0.0.1 - - [09/Jun/2025:10:38:31 +0000] "GET /api/expenses?page=1&limit=4 HTTP/1.1" 200 954 "http://3.7.70.221/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
